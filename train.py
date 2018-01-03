@@ -23,9 +23,9 @@ parser.add_argument("-t","--test_data_path", type=str, default=None,
                     help="path to load test data")
 parser.add_argument("-f","--factor_dim", type=int, default=8,
                     help="dimension of the feature vector")
-parser.add_argument("--layer1_size", type=int, default=200,
+parser.add_argument("--layer1_size", type=int, default=20,
                     help="number of tensors in hidden layer 1")
-parser.add_argument("--layer2_size", type=int, default=40,
+parser.add_argument("--layer2_size", type=int, default=4,
                     help="number of tensors in hidden layer 2")
 
 args = parser.parse_args()

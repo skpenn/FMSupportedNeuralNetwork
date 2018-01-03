@@ -20,6 +20,9 @@ class Model(object):
         self._embeddings = tf.Variable(
             tf.random_normal([ self.feature_size, self.factor_dim], stddev=0.1))
 
+        self._out_w = tf.Variable((tf.random_normal([self.layer2_size], stddev=0.1)))
+        self._out_b = tf.Variable(tf.zeros(1))
+
         self._y = None
         self._error = None
         self._optimizer = None
@@ -42,20 +45,21 @@ class Model(object):
         )
 
         # hidden layer 1
-        layer1_output = tf.nn.dropout(tf.contrib.layers.fully_connected(
+        layer_output = tf.nn.dropout(tf.contrib.layers.fully_connected(
             active_vectors_with_bias,
             self.layer1_size,
             activation_fn=tf.nn.tanh
         ), keep_prob=0.8)
 
         # hidden layer 2
-        layer2_output = tf.nn.dropout(tf.contrib.layers.fully_connected(
-            layer1_output,
+        layer_output = tf.nn.dropout(tf.contrib.layers.fully_connected(
+            layer_output,
             self.layer2_size,
             activation_fn=tf.nn.tanh
         ), keep_prob=0.8)
 
-        output = tf.reduce_sum(layer2_output, 1, keep_dims=True)
+        #output = tf.reduce_sum(layer2_output, 1, keep_dims=True)
+        output = tf.reduce_sum(layer_output*self._out_w+self._out_b, 1, keep_dims=True)
         self._y = tf.nn.sigmoid(output)
         self._error = tf.nn.sigmoid_cross_entropy_with_logits(labels=self.y, logits=output)
 
